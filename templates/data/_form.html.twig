@@ -1,5 +1,5 @@
 {{ form_start(form) }}
     {{ form_widget(form) }}
-    <label for="form"></label><input id="form" type="text" name="text">
+    <label for="form"></label><input id="form" type="text" name="text" value="{{ data.text  }}">
     <button class="btn">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}

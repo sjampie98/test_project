@@ -9,6 +9,7 @@
         <thead>
             <tr>
                 <th>Id</th>
+                <th>Text</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -16,6 +17,7 @@
         {% for data in data %}
             <tr>
                 <td>{{ data.id }}</td>
+                <td>{{ data.text }}</td>
                 <td>
                     <a href="{{ path('app_data_show', {'id': data.id}) }}">show</a>
                     <a href="{{ path('app_data_edit', {'id': data.id}) }}">edit</a>

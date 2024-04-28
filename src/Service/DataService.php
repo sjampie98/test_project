@@ -53,8 +53,9 @@ class DataService extends AbstractController
      * @param $data
      * @return array
      */
-    public function edit($request, $data): array
+    public function edit($request,Data $data): array
     {
+        $data->setText($request->get('text'));
         $form = $this->createForm(DataType::class, $data);
         $form->handleRequest($request);
 

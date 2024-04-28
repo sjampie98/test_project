@@ -14,7 +14,7 @@ class Data
     private ?int $id = null;
 
     #[ORM\Column]
-    private ?string $text = null;
+    private ?string $text;
 
     public function getId(): ?int
     {

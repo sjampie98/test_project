@@ -7,8 +7,6 @@ use App\Form\DataType;
 use App\Repository\DataRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-
 
 class DataService extends AbstractController
 {
@@ -50,7 +48,12 @@ class DataService extends AbstractController
         return ['data' => $data, 'form' => $form];
     }
 
-    public function edit($request, $data)
+    /**
+     * @param $request
+     * @param $data
+     * @return array
+     */
+    public function edit($request, $data): array
     {
         $form = $this->createForm(DataType::class, $data);
         $form->handleRequest($request);
@@ -58,10 +61,22 @@ class DataService extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->flush();
 
-            return $this->redirectToRoute('app_data_index', [], Response::HTTP_SEE_OTHER);
+            return [];
         }
+
+        return ['data' => $data, 'form' => $form];
     }
 
-
-
+    /**
+     * @param $request
+     * @param $data
+     * @return void
+     */
+    public function delete($request, $data): void
+    {
+        if ($this->isCsrfTokenValid('delete'.$data->getId(), $request->getPayload()->get('_token'))) {
+            $this->entityManager->remove($data);
+            $this->entityManager->flush();
+        }
+    }
 }

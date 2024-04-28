@@ -13,8 +13,6 @@ class Data
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\text]
-    #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?string $text = null;
 
@@ -26,5 +24,13 @@ class Data
     public function getText(): ?string
     {
         return $this->text;
+    }
+
+    /**
+     * @param string|null $text
+     */
+    public function setText(?string $text): void
+    {
+        $this->text = $text;
     }
 }

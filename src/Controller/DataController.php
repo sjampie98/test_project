@@ -53,33 +53,30 @@ class DataController extends AbstractController
     #[Route('/{id}', name: 'app_data_show', methods: ['GET'])]
     public function show(Data $data): Response
     {
-        dd($data);
         return $this->render('data/show.html.twig', [
             'data' => $data,
         ]);
     }
 
     #[Route('/{id}/edit', name: 'app_data_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Data $data, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Data $data): Response
     {
-        $form = $this->createForm(DataType::class, $data);
-        $form->handleRequest($request);
+        $new_data= $this->dataService->edit($request, $data);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
+        if (!isset($new_data['data']) && !isset($new_data['form'])) {
             return $this->redirectToRoute('app_data_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('data/edit.html.twig', [
-            'data' => $data,
-            'form' => $form,
+            'data' => $new_data['data'],
+            'form' => $new_data['form'],
         ]);
     }
 
     #[Route('/{id}', name: 'app_data_delete', methods: ['POST'])]
     public function delete(Request $request, Data $data, EntityManagerInterface $entityManager): Response
     {
+        $this->dataService->delete($request, $data);
         if ($this->isCsrfTokenValid('delete'.$data->getId(), $request->getPayload()->get('_token'))) {
             $entityManager->remove($data);
             $entityManager->flush();

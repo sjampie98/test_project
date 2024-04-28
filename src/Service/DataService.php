@@ -7,6 +7,7 @@ use App\Form\DataType;
 use App\Repository\DataRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
 
 
 class DataService extends AbstractController
@@ -35,6 +36,7 @@ class DataService extends AbstractController
     public function create($request): array
     {
         $data = new Data();
+        $data->setText($request->get('text'));
         $form = $this->createForm(DataType::class, $data);
         $form->handleRequest($request);
 
@@ -47,5 +49,19 @@ class DataService extends AbstractController
 
         return ['data' => $data, 'form' => $form];
     }
+
+    public function edit($request, $data)
+    {
+        $form = $this->createForm(DataType::class, $data);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->entityManager->flush();
+
+            return $this->redirectToRoute('app_data_index', [], Response::HTTP_SEE_OTHER);
+        }
+    }
+
+
 
 }

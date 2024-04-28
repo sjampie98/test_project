@@ -7,12 +7,28 @@ use App\Form\DataType;
 use App\Repository\DataRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 
+
+/**
+ * Class DataService
+ */
 class DataService extends AbstractController
 {
+    /**
+     * @var DataRepository
+     */
     private DataRepository $dataRepository;
+
+    /**
+     * @var EntityManagerInterface
+     */
     private EntityManagerInterface $entityManager;
 
+    /**
+     * @param DataRepository $dataRepository
+     * @param EntityManagerInterface $entityManager
+     */
     public function __construct(DataRepository $dataRepository, EntityManagerInterface $entityManager)
     {
         $this->dataRepository = $dataRepository;
@@ -28,10 +44,10 @@ class DataService extends AbstractController
     }
 
     /**
-     * @param $request
+     * @param Request $request
      * @return array
      */
-    public function create($request): array
+    public function create(Request $request): array
     {
         $data = new Data();
         $data->setText($request->get('text'));
@@ -49,11 +65,11 @@ class DataService extends AbstractController
     }
 
     /**
-     * @param $request
-     * @param $data
+     * @param Request $request
+     * @param Data $data
      * @return array
      */
-    public function edit($request,Data $data): array
+    public function edit(Request $request,Data $data): array
     {
         $data->setText($request->get('text'));
         $form = $this->createForm(DataType::class, $data);
@@ -69,11 +85,11 @@ class DataService extends AbstractController
     }
 
     /**
-     * @param $request
-     * @param $data
+     * @param Request $request
+     * @param Data $data
      * @return void
      */
-    public function delete($request, $data): void
+    public function delete(Request $request,Data $data): void
     {
         if ($this->isCsrfTokenValid('delete'.$data->getId(), $request->getPayload()->get('_token'))) {
             $this->entityManager->remove($data);
